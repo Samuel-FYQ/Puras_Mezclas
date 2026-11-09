@@ -1,0 +1,203 @@
+<!DOCTYPE html>
+<html lang="es"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Detectives de la materia</title>
+<style>
+:root{box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px);color-scheme:light;--bg:#f8f7f3;--ink:#1f2433;--lila:#5b3fa8;--lilaL:#ece6fa;--sage:#3f7d57;--sageL:#e4f0e8;--teal:#0e7c78;--tealL:#dcf2f0;--line:#d6d2e0}
+*{box-sizing:inherit}html,body{height:100%;margin:0}
+body{background:var(--bg);color:var(--ink);font-family:system-ui,-apple-system,"Segoe UI",Roboto,sans-serif;font-size:clamp(15px,1.5vw,19px);line-height:1.35}
+#app{height:100%;display:flex;flex-direction:column}
+header{display:flex;gap:10px;align-items:center;flex-wrap:wrap;padding:8px 16px;background:#fff;border-bottom:3px solid var(--lilaL)}
+.brand{display:flex;flex-direction:column;margin-right:auto}.brand b{font-size:1.15em;color:var(--lila)}.brand span{font-size:.8em}
+.chips{display:flex;gap:6px;flex-wrap:wrap}.chip{border:2px solid var(--line);border-radius:99px;padding:2px 10px;background:#fff;font-size:.9em}.chip.on{border-color:var(--teal);background:var(--tealL);font-weight:700}
+button{font:inherit;color:var(--ink);background:#fff;border:2px solid var(--line);border-radius:12px;padding:8px 14px;min-height:44px;cursor:pointer}
+button:hover:not(:disabled){border-color:var(--lila);background:var(--lilaL)}button:disabled{opacity:.45;cursor:not-allowed}
+button:focus-visible,input:focus-visible{outline:3px solid var(--teal);outline-offset:2px}
+.primary{background:var(--lila);border-color:var(--lila);color:#fff;font-weight:700}.primary:hover:not(:disabled){background:#4a3290;color:#fff}
+.prog{padding:6px 16px;display:flex;gap:12px;align-items:center;font-size:.9em}.bar{flex:1;height:10px;background:var(--lilaL);border-radius:9px;overflow:hidden}.bar i{display:block;height:100%;background:var(--sage)}
+.play,.center{flex:1;min-height:0;padding:8px 16px}
+.play{display:grid;grid-template-columns:minmax(0,5fr) minmax(0,6fr);gap:14px}
+.center{display:flex;align-items:center;justify-content:center;overflow:auto}
+.card{background:#fff;border:2px solid var(--line);border-radius:16px;padding:14px;min-height:0;display:flex;flex-direction:column;gap:8px;overflow:auto}
+.draw{overflow:hidden;align-items:stretch}.sv{flex:1;min-height:0;display:grid;grid-auto-flow:column;grid-auto-columns:minmax(0,1fr);gap:8px}.sv svg{width:100%;height:100%;min-height:0}
+.cap{margin:0;text-align:center;font-size:.85em}
+.tag{display:inline-block;align-self:flex-start;background:var(--sageL);border:2px solid var(--sage);border-radius:8px;padding:1px 9px;font-size:.8em;font-weight:700}
+.turn{background:var(--tealL);border:2px solid var(--teal);border-radius:10px;padding:4px 10px;font-size:1.05em}
+h1{margin:0;font-size:clamp(1.6rem,3.4vw,2.6rem);color:var(--lila)}h2{margin:0;font-size:clamp(1.15rem,2.2vw,1.7rem)}h3{margin:0}p{margin:0}
+.prompt{color:var(--teal);font-weight:700}
+.opts{display:grid;gap:8px;grid-template-columns:1fr 1fr}.opts.m{grid-template-columns:1fr}
+.opt{text-align:left;font-size:clamp(1rem,1.6vw,1.25rem);padding:10px 14px;border-width:3px}.opt.sel{border-color:var(--lila);background:var(--lilaL);font-weight:700}.opt.right,.opt.right:disabled{border-color:var(--sage);background:var(--sageL);opacity:1}.opt.bad,.opt.bad:disabled{border-color:#b3261e;background:#fdeceb;opacity:1}.mk.bd{color:#b3261e}.mk{font-size:.8em;font-weight:700;color:var(--sage)}
+.slots,.cards{display:flex;gap:8px;flex-wrap:wrap}.slot{flex:1;min-width:150px;text-align:left;border-style:dashed;border-width:3px}.slot small{display:block;font-weight:700;color:var(--lila);letter-spacing:.05em}.slot.act{border-color:var(--teal);background:var(--tealL)}.slot.full{border-style:solid}
+.fc{text-transform:capitalize;font-size:1.1em;border-width:3px}.fc.used{background:var(--lilaL)}
+.fb{border-left:8px solid;border-radius:10px;padding:8px 12px}.fb.ok{background:var(--sageL);border-color:var(--sage)}.fb.no{background:#fdeceb;border-color:#b3261e}.fb.rev{background:var(--lilaL);border-color:var(--lila)}
+.why{font-style:italic;font-size:.9em}.row{display:flex;gap:8px;flex-wrap:wrap}
+footer{display:flex;gap:10px;justify-content:space-between;padding:8px 16px;background:#fff;border-top:3px solid var(--lilaL)}footer button{flex:1;max-width:260px}
+.start{max-width:720px;width:100%;gap:12px;align-items:center;text-align:center}.lead{font-size:1.25em}
+.modes button[aria-pressed=true]{border-color:var(--lila);background:var(--lilaL);font-weight:700}
+.tn{display:flex;gap:8px;flex-wrap:wrap;justify-content:center}input{font:inherit;border:2px solid var(--line);border-radius:10px;padding:8px;min-height:44px;width:150px}
+.fin{display:grid;grid-template-columns:1fr 1fr;gap:14px;width:100%;max-width:1100px}.big{font-size:2.2em;font-weight:800;color:var(--lila)}
+ol,ul{margin:0;padding-left:1.2em}
+.ov{position:fixed;inset:0;background:rgba(31,36,51,.45);display:flex;align-items:center;justify-content:center;padding:16px;z-index:9}.md{background:#fff;border-radius:16px;border:3px solid var(--lila);max-width:900px;max-height:92%;overflow:auto;padding:16px;display:flex;flex-direction:column;gap:10px}
+.g2{display:grid;grid-template-columns:1fr 1fr;gap:12px}.nd{display:flex;gap:8px;align-items:center;border:2px solid var(--line);border-radius:10px;padding:6px 8px;margin-top:6px;font-size:.9em}.nd svg{width:84px;flex:none}.nd span{display:block}.nd b{color:var(--lila)}
+.dc{width:100%;height:auto;max-height:50vh;object-fit:contain;border:2px solid var(--line);border-radius:8px}.fm{display:flex;gap:8px;flex-wrap:wrap}select{font:inherit;min-height:44px;border:2px solid var(--line);border-radius:10px;padding:6px;background:#fff}
+@media(max-width:820px){#app{height:auto;min-height:100%}.play,.fin,.g2{grid-template-columns:1fr}.draw{height:250px}}
+</style></head><body><div id="app"></div>
+<script>
+const $=s=>document.querySelector(s),KEY="detectives-materia-v2";
+const esc=s=>String(s).replace(/[&<>"]/g,m=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[m]));
+const IN="#1f2433",W="#bfe6ef",COL={A:"#c9b8f0",B:"#8fdcd5"};
+const sv=(i,vb,a)=>`<svg viewBox="${vb||"0 0 220 185"}" role="img" aria-label="${a||"Dibujo"}">${i}</svg>`;
+const liq=(f,y=72)=>`<path d="M64 ${y}H156V146Q156 154 148 154H72Q64 154 64 146Z" fill="${f}"/>`;
+const out=`<path d="M62 30V146Q62 156 72 156H148Q158 156 158 146V30" fill="none" stroke="${IN}" stroke-width="4" stroke-linecap="round"/>`;
+const lbl=(t,y=176)=>`<text x="110" y="${y}" text-anchor="middle" font-size="16" font-weight="700" fill="${IN}">${t}</text>`;
+const beaker=(i,a,t)=>sv(i+out+(t?lbl(t):""),0,a);
+const at=(x,y,k)=>`<circle cx="${x}" cy="${y}" r="11" fill="${COL[k]}" stroke="${IN}" stroke-width="2"/>`;
+const mol=(x,y,a,b,r=0)=>`<g transform="translate(${x} ${y}) rotate(${r})"><line x1="-11" y1="0" x2="11" y2="0" stroke="${IN}" stroke-width="5"/>${at(-11,0,a)}${at(11,0,b)}</g>`;
+const box=i=>sv(`<rect x="8" y="8" width="244" height="154" rx="14" fill="#fbfbff" stroke="${IN}" stroke-width="3"/>${i}`,"0 0 260 170","Modelo de partículas en un recipiente");
+const jar=(l,t)=>sv(`<path d="M50 50V150Q50 160 60 160H160Q170 160 170 150V50" fill="#f4fbfd" stroke="${IN}" stroke-width="4"/>${l.map(([x,y,k,r])=>mol(x,y,k,k,r)).join("")}${lbl(t)}`,0,"Recipiente con gas: "+t);
+const cyl=t=>sv(`<rect x="100" y="30" width="20" height="30" fill="#c9c6d8" stroke="${IN}" stroke-width="3"/><rect x="90" y="24" width="40" height="10" rx="3" fill="${IN}"/><rect x="75" y="58" width="70" height="104" rx="26" fill="#e4e2f0" stroke="${IN}" stroke-width="4"/><text x="110" y="118" text-anchor="middle" font-size="22" font-weight="800" fill="${IN}">${t}</text>`,0,"Botella de gas "+t);
+const fe=()=>sv(`<path d="M45 75l28-28h120l-28 28z" fill="#dde2e8" stroke="${IN}" stroke-width="3"/><rect x="45" y="75" width="120" height="65" fill="#aab2bd" stroke="${IN}" stroke-width="3"/><path d="M165 75l28-28v65l-28 28z" fill="#8d96a3" stroke="${IN}" stroke-width="3"/><text x="105" y="118" text-anchor="middle" font-size="26" font-weight="800" fill="${IN}">Fe</text>`,0,"Bloque de hierro");
+const sp=[["#e7a3a0",70,95,12,7,20],["#33363d",100,75,9,6,-30],["#f6f4f0",130,105,14,8,10],["#e7a3a0",150,80,10,7,50],["#33363d",85,125,10,6,0],["#f6f4f0",60,115,8,5,40],["#33363d",165,115,9,6,-20],["#e7a3a0",115,132,11,6,-10],["#f6f4f0",110,70,9,6,0],["#33363d",140,60,7,5,30]];
+const granite=()=>sv(`<path d="M30 120Q28 70 75 52Q120 30 168 55Q205 80 190 125Q172 156 110 152Q48 156 30 120Z" fill="#d3cdc9" stroke="${IN}" stroke-width="4"/>${sp.map(([f,x,y,a,b,r])=>`<ellipse cx="${x}" cy="${y}" rx="${a}" ry="${b}" transform="rotate(${r} ${x} ${y})" fill="${f}" stroke="${IN}" stroke-width="1.5"/>`).join("")}`,0,"Roca de granito con minerales de varios tipos");
+const oilw=()=>beaker(`<path d="M64 72H156V104H64Z" fill="#f1d36a"/><path d="M64 104H156V146Q156 154 148 154H72Q64 154 64 146Z" fill="${W}"/><line x1="64" y1="104" x2="156" y2="104" stroke="${IN}" stroke-width="2"/>`,"Vaso con aceite sobre agua en dos capas");
+const milk=()=>sv(`<path d="M70 40H150L142 150Q141 158 133 158H87Q79 158 78 150Z" fill="none" stroke="${IN}" stroke-width="4"/><path d="M73 62H147L142 150Q141 156 133 156H87Q79 156 78 150Z" fill="#faf6e9"/>`+lbl("Leche"),0,"Vaso de leche de aspecto uniforme");
+const dr=[[70,70,13],[110,60,9],[150,75,12],[85,105,10],[125,100,14],[160,115,9],[70,135,11],[110,135,9],[145,145,12],[100,85,6],[135,125,6]];
+const zoom=c=>sv(`<defs><clipPath id="zc"><circle cx="110" cy="85" r="72"/></clipPath></defs><g clip-path="url(#zc)"><rect width="220" height="185" fill="#f3efe0"/>${dr.map(([x,y,r])=>`<circle cx="${x+10}" cy="${y-5}" r="${r}" fill="#f2cf6b" stroke="#a97c0a" stroke-width="1.5"/>`).join("")}</g><circle cx="110" cy="85" r="72" fill="none" stroke="${IN}" stroke-width="4"/><text x="110" y="177" text-anchor="middle" font-size="13" font-weight="700" fill="${IN}">${c}</text>`,0,"Ampliación esquemática: gotitas dispersas en un medio continuo");
+const qm=sv(`<circle cx="100" cy="85" r="52" fill="none" stroke="${IN}" stroke-width="6"/><line x1="138" y1="123" x2="185" y2="170" stroke="${IN}" stroke-width="11" stroke-linecap="round"/><text x="100" y="106" text-anchor="middle" font-size="58" font-weight="800" fill="${IN}">?</text>`,0,"Lupa con signo de interrogación");
+const sp1=[[50,50],[130,40],[210,60],[70,115],[150,120],[215,110]],pp=[[62,55,0],[185,48,25],[75,118,-25],[190,115,0]];
+const O4=["Elemento","Compuesto","Mezcla homogénea","Mezcla heterogénea"];
+const LEG="Cada color representa un tipo de átomo. Las esferas unidas representan átomos enlazados.";
+const TRI="Recuerda: el tipo de átomo (color), el tipo de sustancia y tener átomos unidos son tres ideas distintas; «molécula» no significa siempre «compuesto».";
+const CN={E:"Elemento: sustancia pura con un solo tipo de átomo (aunque estén unidos en moléculas).",K:"Compuesto: sustancia pura con distintos tipos de átomos unidos químicamente en proporciones fijas.",H:"Mezcla homogénea (disolución): componentes distribuidos uniformemente.",T:"Mezcla heterogénea: distribución no uniforme; se distingue a simple vista o con instrumentos.",C:"Coloide: mezcla heterogénea que puede parecer homogénea a simple vista.",S:"Soluto (generalmente en menor proporción) y disolvente (generalmente en mayor proporción); también hay disoluciones gaseosas."};
+const M=(n,q,d,a,e,h,cn)=>({k:"c",b:"Bloque 1 · Clasifica las muestras",n:`Muestra ${n} de 8`,q,d,a,e,h,cn,o:O4,p:"¿Cómo clasificas esta muestra?"});
+const P=(n,d,a,e,h,cn)=>({k:"c",b:"Bloque 2 · El misterio de las partículas",n:`Reto ${n} de 4`,q:"Observa el modelo de partículas del recipiente.",p:"¿Qué hay dentro del recipiente?",d,a,e:e+" "+TRI,h,cn,o:O4,cap:LEG});
+const air=[[82,72,"B",0],[128,70,"B",25],[120,102,"A",0],[82,106,"B",-25],[100,138,"B",0],[140,132,"A",30]];
+const gas=[[82,72,"B",0],[128,70,"B",25],[82,106,"B",-25],[125,104,"B",0],[100,138,"A",0]];
+const F=(n,q,d,cards,ans,e,h,x)=>({k:"f",b:"Bloque 4 · Soluto y disolvente",n:`Reto ${n} de 3`,q,p:"Completa: primero el soluto y después el disolvente.",d,cards,ans,e,h,cn:"S",x});
+const C0=[
+M(1,"Muestra de hierro puro (Fe).",fe,0,"El hierro puro está formado por un único tipo de átomo: es un elemento.","Piensa en cuántos tipos de átomo hay en una muestra formada solo por hierro.","E"),
+M(2,"Oxígeno puro (O₂).",()=>cyl("O₂"),0,"El oxígeno O₂ sigue siendo un elemento porque sus moléculas contienen un único tipo de átomo.","Cuenta los tipos de átomo distintos, no si están unidos.","E"),
+M(3,"Agua destilada, considerada H₂O pura.",()=>beaker(liq(W),"Vaso con agua destilada","H₂O"),1,"El agua pura es un compuesto porque contiene hidrógeno y oxígeno unidos químicamente.","Es una sola sustancia, pero con más de un tipo de átomo unidos químicamente.","K"),
+M(4,"Dióxido de carbono puro (CO₂).",()=>cyl("CO₂"),1,"El CO₂ es un compuesto: una sola sustancia con carbono y oxígeno unidos químicamente en proporción fija.","Mira cuántos tipos de átomo aparecen en la fórmula.","K"),
+M(5,"Agua con una pequeña cantidad de sal completamente disuelta.",()=>beaker(liq("#cfe9ec"),"Vaso con agua salada, sin sal en el fondo"),2,"Es una mezcla homogénea (una disolución): la sal disuelta no desaparece, está repartida uniformemente en el agua.","Hay dos sustancias, pero no se distinguen y todo está repartido por igual.","H"),
+M(6,"Aire limpio, sin polvo ni gotitas.",()=>jar(air,"Aire"),2,"El aire contiene varias sustancias gaseosas (nitrógeno, oxígeno…) repartidas uniformemente: es una mezcla homogénea.","Hay varias sustancias gaseosas. ¿Cómo están repartidas?","H"),
+M(7,"Agua y aceite en dos capas.",oilw,3,"Se distinguen dos capas con sustancias diferentes: es una mezcla heterogénea.","¿Se distinguen partes diferentes en la muestra?","T"),
+M(8,"Granito con minerales visibles.",granite,3,"El granito contiene distintos minerales que se distinguen a simple vista: es una mezcla heterogénea.","Los minerales se ven por separado, no están repartidos de forma uniforme.","T"),
+P(1,()=>box(sp1.map(([x,y])=>at(x,y,"A")).join("")),0,"Hay un solo tipo de átomo y ninguno está unido a otro: es un elemento.","Cuenta los colores y fíjate en si hay átomos enlazados.","E"),
+P(2,()=>box(pp.map(([x,y,r])=>mol(x,y,"A","A",r)).join("")),0,"Hay átomos unidos formando moléculas, pero todos son del mismo tipo: sigue siendo un elemento.","Hay átomos unidos, pero ¿cuántos tipos de átomo distintos ves?","E"),
+P(3,()=>box(pp.map(([x,y,r])=>mol(x,y,"A","B",r)).join("")),1,"Todas las moléculas son iguales y combinan dos tipos de átomo unidos: es una sola sustancia, un compuesto.","Todas las moléculas son idénticas, ¿y cuántos tipos de átomo tiene cada una?","K"),
+P(4,()=>box([[55,50,"A"],[130,50,"B"],[205,50,"A"],[55,115,"B"],[130,115,"A"],[205,115,"B"]].map(([x,y,k])=>mol(x,y,k,k)).join("")),2,"Hay dos tipos de moléculas distintas (dos sustancias) repartidas uniformemente: es una mezcla homogénea.","Compara las moléculas: ¿son todas la misma sustancia? ¿Cómo están repartidas?","H"),
+{k:"m",b:"Bloque 3 · Las apariencias engañan",n:"Reto 1 de 2",q:"Parece uniforme. ¿Significa que es una disolución?",p:"Elige una opción.",d:x=>milk()+(x?zoom("Ampliación esquemática"):""),o:["Sí, todo lo que parece uniforme es una disolución.","No, es un coloide.","No, es una sustancia pura."],a:1,e:"La leche es un coloide: tiene partículas dispersas y se clasifica como mezcla heterogénea, aunque parezca homogénea a simple vista.",h:"Que algo parezca uniforme no basta: ¿qué hay dentro, partículas dispersas?",cn:"C"},
+{k:"m",b:"Bloque 3 · Las apariencias engañan",n:"Reto 2 de 2",q:"¿Cuál de estas parejas contiene dos ejemplos de coloides?",p:"Elige una opción.",d:x=>x?zoom("Ampliación esquemática: emulsión"):qm,o:["Leche y mayonesa.","Hierro puro y agua pura.","Aire limpio y agua con sal disuelta."],a:0,e:"La leche y la mayonesa son emulsiones: gotitas de un líquido dispersas en otro. Ambas son coloides.",h:"Los coloides son mezclas: descarta las sustancias puras y las disoluciones.",cn:"C"},
+F(1,"Disolvemos 5 g de sal en 100 g de agua.",()=>beaker(liq("#cfe9ec"),"Vaso con una disolución"),["agua","sal"],["sal","agua"],"El soluto es la sal (menor proporción) y el disolvente es el agua (mayor proporción).","El soluto suele estar en menor proporción; el disolvente, en mayor.",1),
+F(2,"Disolvemos 10 g de azúcar en 200 g de agua.",()=>beaker(liq("#cfe9ec"),"Vaso con una disolución"),["agua","azúcar"],["azúcar","agua"],"El soluto es el azúcar (menor proporción) y el disolvente es el agua (mayor proporción).","Compara las cantidades: 10 g frente a 200 g."),
+F(3,"Una mezcla gaseosa homogénea contiene 80 partes de nitrógeno y 20 partes de oxígeno.",()=>jar(gas,"Mezcla gaseosa"),["oxígeno","nitrógeno"],["oxígeno","nitrógeno"],"El soluto es el oxígeno (20 partes) y el disolvente es el nitrógeno (80 partes). Una disolución también puede ser gaseosa: no todas contienen agua.","El soluto es el que está en menor proporción.")
+];
+const ell=(l,f)=>l.map(([x,y,a,b,r])=>`<ellipse cx="${x}" cy="${y}" rx="${a}" ry="${b}" transform="rotate(${r} ${x} ${y})" fill="${f}" stroke="${IN}" stroke-width="2"/>`).join("");
+const cc=(l,f,r)=>l.map(([x,y])=>`<circle cx="${x}" cy="${y}" r="${r}" fill="${f}" stroke="${IN}" stroke-width="2"/>`).join("");
+const bowl=`<path d="M25 95H195Q190 160 110 165Q30 160 25 95Z" fill="#fff" stroke="${IN}" stroke-width="4"/>`,surf=f=>`<ellipse cx="110" cy="95" rx="85" ry="14" fill="${f}" stroke="${IN}" stroke-width="3"/>`;
+const salad=sv(ell([[60,88,26,12,-20],[110,80,28,12,15],[150,88,26,12,25],[90,98,24,10,-40]],"#6fbf73")+cc([[75,92],[132,92]],"#e0584f",12)+cc([[100,90],[112,98],[96,102]],"#f3d34a",4)+`<circle cx="168" cy="96" r="9" fill="none" stroke="#a974c9" stroke-width="5"/>`+bowl,0,"Ensalada con lechuga, tomate, maíz y cebolla");
+const potaje=sv(bowl+surf("#c98f45")+cc([[70,93],[96,99],[126,92],[150,98],[108,90]],"#e6cf8f",7)+cc([[84,101],[138,102],[58,99]],"#ee8a2b",7),0,"Potaje de garbanzos con zanahoria");
+const cereal=sv(bowl+surf("#faf6e9")+[[70,93],[96,98],[126,92],[150,97],[108,90],[84,102]].map(([x,y])=>`<circle cx="${x}" cy="${y}" r="8" fill="none" stroke="#d9a441" stroke-width="5"/>`).join(""),0,"Cuenco de cereales con leche");
+const tea=sv(`<path d="M73 62H147L142 150Q141 156 133 156H87Q79 156 78 150Z" fill="#d9985a"/><path d="M70 40H150L142 150Q141 158 133 158H87Q79 158 78 150Z" fill="none" stroke="${IN}" stroke-width="4"/>`+lbl("Té"),0,"Vaso de té colado");
+const cobre=sv([60,85,110,135].map(y=>`<ellipse cx="100" cy="${y}" rx="62" ry="15" fill="none" stroke="#b87333" stroke-width="12"/>`).join("")+`<path d="M162 135C190 140 195 160 214 160" fill="none" stroke="#b87333" stroke-width="8" stroke-linecap="round"/>`+lbl("Cu"),0,"Rollo de cable de cobre");
+const salero=sv(`<path d="M72 82H148L155 160Q155 168 147 168H73Q65 168 65 160Z" fill="#fff" stroke="${IN}" stroke-width="4"/><path d="M72 82Q72 40 110 40Q148 40 148 82Z" fill="#c9c6d8" stroke="${IN}" stroke-width="4"/>`+cc([[95,62],[110,56],[125,62],[110,70]],IN,3)+`<text x="110" y="132" text-anchor="middle" font-size="26" font-weight="800" fill="${IN}">NaCl</text>`,0,"Salero con sal de mesa");
+const V=(n,q,d,a,e,h,cn)=>({k:"c",b:"Bloque 2 · En la vida cotidiana",n:`Ejemplo ${n} de 7`,q,d,a,e,h,cn,o:O4,p:"¿Cómo lo clasificas?"});
+const C=[...C0.slice(0,8),
+V(1,"Ensalada de lechuga, tomate, maíz y cebolla.",()=>salad,3,"En la ensalada se distinguen a simple vista los ingredientes y no están repartidos de forma uniforme: es una mezcla heterogénea.","¿Puedes ver cada ingrediente por separado?","T"),
+V(2,"Cable de cobre puro (Cu).",()=>cobre,0,"El cobre puro está formado por un único tipo de átomo: es un elemento.","Piensa en cuántos tipos de átomo tiene un metal puro.","E"),
+V(3,"Té colado con azúcar completamente disuelto.",()=>tea,2,"Es una mezcla homogénea (una disolución): el azúcar disuelto no se ve y está repartido uniformemente.","No hay trozos ni azúcar en el fondo: todo está repartido por igual.","H"),
+V(4,"Potaje de garbanzos con verduras.",()=>potaje,3,"En el potaje se ven los garbanzos y las verduras dentro del caldo: es una mezcla heterogénea.","¿Se distinguen partes diferentes dentro del plato?","T"),
+V(5,"Sal de mesa pura (cloruro de sodio, NaCl).",()=>salero,1,"La sal pura es una sola sustancia formada por sodio y cloro unidos químicamente: es un compuesto.","Es una sola sustancia, pero su fórmula tiene más de un tipo de átomo.","K"),
+V(6,"Agua de mar filtrada, sin arena ni algas.",()=>beaker(liq("#a9dbe8"),"Vaso con agua de mar filtrada"),2,"Contiene agua y sales disueltas repartidas uniformemente: es una mezcla homogénea.","Una vez filtrada, no se distinguen partes: ¿qué tipo de mezcla es?","H"),
+V(7,"Cereales con leche.",()=>cereal,3,"Los cereales se distinguen de la leche a simple vista: es una mezcla heterogénea.","¿Se ven los componentes por separado?","T"),
+...C0.filter(c=>c.k==="m")];
+C.forEach((c,i)=>c.id=i);
+const D=()=>({scene:"start",mode:"ind",n:3,teams:["Equipo 1","Equipo 2","Equipo 3","Equipo 4","Equipo 5"],idx:0,res:{},rres:{},rev:[],ri:0});
+let S=D(),ui;const rst=()=>ui={sel:null,fill:[null,null],act:0,fb:null,modal:null,expl:false,focus:null};rst();
+const save=()=>{try{localStorage.setItem(KEY,JSON.stringify(S))}catch(e){}};
+try{const t=localStorage.getItem(KEY);if(t){S=Object.assign(D(),JSON.parse(t));if(S.scene==="review"&&!S.rev.length)S.scene="final";S.mode="ind"}}catch(e){}
+const rv=()=>S.scene==="review",cur=()=>rv()?C[S.rev[S.ri]]:C[S.idx],store=()=>rv()?S.rres:S.res;
+const teamN=()=>S.mode==="team"?S.n:1;
+function totals(){const n=teamN(),t=Array(n).fill(0);C.forEach(c=>{const r=S.res[c.id];if(r&&r.done)t[n>1?c.id%n:0]+=r.pts});return t}
+const failed=()=>C.filter(c=>{const r=S.res[c.id];return r&&r.done&&!(r.ok&&r.att===1)});
+const sol=c=>c.k==="f"?`Soluto: ${c.ans[0]} · Disolvente: ${c.ans[1]}`:c.k==="m"?`${"ABC"[c.a]}. ${c.o[c.a]}`:c.o[c.a];
+function head(){const play=S.scene!=="start",tt=totals(),n=teamN(),ct=!rv()&&S.scene==="play"?S.idx%n:-1;
+ const chips=play?(S.mode==="team"?S.teams.slice(0,n).map((t,j)=>`<span class="chip ${j===ct?"on":""}">${j===ct?"▶ ":""}${esc(t)}: <b>${tt[j]}</b></span>`).join(""):`<span class="chip">Puntos: <b>${tt[0]}</b></span>`):"";
+ return `<header><div class="brand"><b>Detectives de la materia</b><span>2.º ESO · Sistemas materiales</span></div><div class="chips">${chips}</div><button data-a="hint" data-f="hint">Pista</button><button data-a="fs" data-f="fs">Pantalla completa</button>${play?`<button data-a="reset" data-f="rs">Reiniciar</button>`:""}</header>`}
+function startV(){const tm=false;
+ return `<main class="center"><section class="card start"><h1>Detectives de la materia</h1><p class="lead">¿Una sola sustancia o varias? Observa y decide.</p>
+ 
+ ${tm?`<div class="row modes" role="group" aria-label="Número de equipos">${[2,3,4,5].map(k=>`<button data-a="n" data-i="${k}" data-f="n${k}" aria-pressed="${S.n===k}">${k} equipos</button>`).join("")}</div><div class="tn">${S.teams.slice(0,S.n).map((t,j)=>`<input data-t="${j}" value="${esc(t)}" maxlength="20" aria-label="Nombre del equipo ${j+1}">`).join("")}</div>`:""}
+ <button class="primary" data-a="start" data-f="go" style="font-size:1.2em;padding:12px 36px">Empezar</button></section></main>`}
+function playV(){const c=cur(),r=store()[c.id],done=r&&r.done,R=rv(),n=teamN(),state=done?(r.ok?"ok":"rev"):ui.fb;
+ let body="";
+ if(c.k==="f"){const fl=done?c.ans:ui.fill;
+  body=`<div class="slots">${["SOLUTO","DISOLVENTE"].map((s,j)=>`<button class="slot ${!done&&ui.act===j?"act":""} ${fl[j]?"full":""}" data-a="slot" data-i="${j}" data-f="s${j}" ${done?"disabled":""}><small>${!done&&ui.act===j?"▸ ":""}${s}</small><span style="text-transform:capitalize;font-size:1.15em">${fl[j]?esc(fl[j]):"— elige una tarjeta —"}</span></button>`).join("")}</div>
+  <div class="cards">${c.cards.map((t,j)=>`<button class="fc ${ui.fill.includes(t)?"used":""}" data-a="card" data-i="${j}" data-f="c${j}" ${done?"disabled":""}>${t}${ui.fill.includes(t)&&!done?" ✓":""}</button>`).join("")}</div>`}
+ else body=`<div class="opts ${c.k==="m"?"m":""}">${c.o.map((o,i)=>`<button class="opt ${r&&r.w&&r.w.includes(i)?"bad":""} ${done&&i===c.a?"right":""}" data-a="opt" data-i="${i}" data-f="o${i}" ${done||(r&&r.w&&r.w.includes(i))?"disabled":""}>${c.k==="m"?`<b>${"ABC"[i]}.</b> `:""}${o}${r&&r.w&&r.w.includes(i)?` <span class="mk bd">✖ Incorrecta</span>`:""}${done&&i===c.a?` <span class="mk">✔ Correcta</span>`:""}</button>`).join("")}</div>`;
+ let fb="";
+ if(state==="ok")fb=`<div class="fb ok" role="status"><b>✔ ¡Correcto!</b> ${R?"":r.att===1?"+2 puntos. ":r.att===2?"+1 punto. ":"0 puntos. "}${c.e}</div>`;
+ else if(state==="rev")fb=`<div class="fb rev" role="status"><b>ℹ Solución:</b> ${sol(c)}. ${c.e}${R?"":" (0 puntos en este reto)"}</div>`;
+ else if(state==="no")fb=`<div class="fb no" role="status"><b>✖ Todavía no.</b> Pista: ${c.h} Inténtalo de nuevo.</div>`;
+ if(done&&c.x){const e=r.extra;fb+=`<div class="card" style="padding:8px 12px"><b>Reflexión (no suma puntos): ¿La sal ha desaparecido?</b><div class="row"><button data-a="ex" data-i="1" data-f="ex1" aria-pressed="${e==="s"}">Sí</button><button data-a="ex" data-i="0" data-f="ex0" aria-pressed="${e==="n"}">No</button></div>${e?`<div class="fb ${e==="n"?"ok":"no"}" role="status"><b>${e==="n"?"✔ Correcto.":"✖ No exactamente."}</b> Sigue presente, repartida por toda la disolución.</div>`:""}</div>`}
+ const can=!done&&(c.k==="f"?ui.fill[0]&&ui.fill[1]:ui.sel!==null),last=R?S.ri===S.rev.length-1:S.idx===C.length-1;
+ const pos=R?S.ri:S.idx,tot=R?S.rev.length:C.length,pct=(pos+(done?1:0))/tot*100;
+ return `<div class="prog"><span><b>${R?`Repaso ${pos+1} de ${tot} (sin puntos)`:`Reto ${pos+1} de ${tot}`}</b></span><div class="bar" role="progressbar" aria-valuemin="0" aria-valuemax="${tot}" aria-valuenow="${pos+(done?1:0)}"><i style="width:${pct}%"></i></div></div>
+ <main class="play"><section class="card draw" aria-label="Dibujo del reto"><div class="sv">${c.d(!!done)}</div>${c.cap?`<p class="cap">${c.cap}</p>`:""}</section>
+ <section class="card"><span class="tag">${c.b} · ${c.n}</span>${!R&&S.mode==="team"?`<div class="turn">▶ Turno de: <b>${esc(S.teams[S.idx%n])}</b></div>`:""}<h2>${c.q}</h2><p class="prompt">${c.p}</p>${body}${fb}</section></main>
+ <footer><button data-a="prev" data-f="pv" ${pos===0?"disabled":""}>← Anterior</button><button class="primary" data-a="next" data-f="nx" ${done?"":"disabled"}>${last?"Ver resultado":"Siguiente →"}</button></footer>`}
+function finalV(){const tt=totals(),first=C.filter(c=>{const r=S.res[c.id];return r&&r.ok&&r.att===1}).length,f=failed(),cs=[...new Set(f.map(c=>c.cn))],tm=S.mode==="team";
+ const rk=tt.map((p,j)=>({p,t:S.teams[j]})).sort((a,b)=>b.p-a.p);
+ return `<main class="center"><div class="fin"><section class="card"><h2>Resultado final</h2><p class="big">${tt.reduce((a,b)=>a+b,0)} puntos</p><p>Retos acertados a la primera: <b>${first} de ${C.length}</b></p>
+ ${tm?`<h3>Clasificación</h3><ol>${rk.map(x=>`<li><b>${esc(x.t)}</b>: ${x.p} puntos</li>`).join("")}</ol><p>★ Reconocimiento para todos los equipos: cada intento, acierto y debate ha ayudado a aprender.</p>`:"<p>★ Buen trabajo de detective: lo importante es explicar cada decisión.</p>"}</section>
+ <section class="card"><h3>Conviene repasar</h3>${cs.length?`<ul>${cs.map(k=>`<li>${CN[k]}</li>`).join("")}</ul>`:"<p>✔ No ha habido errores: no hay nada que repasar.</p>"}
+ <div class="row"><button class="primary" data-a="review" data-f="rv" ${f.length?"":"disabled"}>Repasar errores</button><button data-a="dip" data-f="dp">Obtener diploma</button><button data-a="reset" data-f="rs2">Volver a empezar</button></div><hr style="width:100%">
+ <p class="prompt">¿Por qué un vaso de agua transparente podría contener una sustancia pura o una mezcla?</p><div><button data-a="expl" data-f="ex" aria-expanded="${ui.expl}">Ver explicación</button></div>
+ ${ui.expl?`<div class="fb rev" role="status">Por su aspecto no podemos asegurarlo: podría ser agua pura o contener sustancias disueltas.</div>`:""}</section></div></main>`}
+const ic={E:[20,60,100].map(x=>at(x,22,"A")).join(""),K:mol(32,22,"A","B")+mol(90,22,"A","B"),H:[[14,12,"A"],[42,12,"B"],[70,12,"A"],[98,12,"B"],[28,32,"B"],[56,32,"A"],[84,32,"B"]].map(([x,y,k])=>at(x,y,k)).join(""),T:[[14,12],[34,12],[24,32],[44,32]].map(([x,y])=>at(x,y,"A")).join("")+[[82,12],[102,12],[92,32],[112,32]].map(([x,y])=>at(x,y,"B")).join("")};
+const nd=(k,t,d)=>`<div class="nd">${k?sv(ic[k],"0 0 125 44"):""}<div><b>${t}</b><span>${d}</span></div></div>`;
+function modalV(){if(ui.modal==="dip")return DIPM();if(ui.modal==="reset")return `<div class="ov"><div class="md" role="dialog" aria-modal="true" aria-label="Confirmar"><h3>¿Volver a empezar?</h3><p>Se borrarán el progreso y las puntuaciones.</p><div class="row"><button class="primary" data-a="doreset" data-f="yes">Sí, borrar</button><button data-a="close" data-f="no">Cancelar</button></div></div></div>`;
+ return `<div class="ov"><div class="md" role="dialog" aria-modal="true" aria-label="Pista"><div class="row" style="justify-content:space-between"><h3>Pista: resumen visual</h3><button data-a="close" data-f="cl">Cerrar</button></div><div class="g2"><div>${nd(0,"Sustancia pura","Una sola sustancia y composición fija.")}${nd("E","Elemento","Un solo tipo de átomo.")}${nd("K","Compuesto","Distintos tipos de átomos unidos químicamente en proporciones fijas.")}</div>
+ <div>${nd(0,"Mezcla","Dos o más sustancias y composición variable.")}${nd("H","Homogénea","Componentes distribuidos uniformemente; también se llama disolución.")}${nd("T","Heterogénea","Distribución no uniforme; los componentes pueden distinguirse a simple vista o mediante instrumentos.")}${nd(0,"Coloide","Mezcla heterogénea que puede parecer homogénea a simple vista.")}</div></div><p class="cap">Cada color representa un tipo de átomo; las esferas unidas son átomos enlazados.</p></div></div>`}
+function render(){const a=document.activeElement,f=ui.focus||(a&&a.dataset&&a.dataset.f);ui.focus=null;
+ $("#app").innerHTML=head()+(S.scene==="start"?startV():S.scene==="final"?finalV():playV())+(ui.modal?modalV():"");
+ if(ui.modal==="dip")drawDip();if(f){const e=document.querySelector(`[data-f="${f}"]`);if(e)e.focus()}}
+function go(d){const R=rv();rst();if(R){const j=S.ri+d;if(j<0)return render();if(j>=S.rev.length)S.scene="final";else S.ri=j}else{const j=S.idx+d;if(j<0)return render();if(j>=C.length)S.scene="final";else S.idx=j}save();render()}
+function check(i){const c=cur(),st=store(),r=st[c.id]||(st[c.id]={att:0,done:false,w:[]});r.w=r.w||[];
+ const ok=c.k==="f"?ui.fill[0]===c.ans[0]&&ui.fill[1]===c.ans[1]:i===c.a;
+ r.att++;if(ok){r.done=true;r.ok=true;r.pts=r.att===1?2:r.att===2?1:0}else if(c.k!=="f")r.w.push(i);
+ ui.fb=ok?null:"no";ui.sel=null;ui.fill=[null,null];ui.act=0;save();render()}
+function act(a,i){switch(a){
+ case"mode":S.mode=i?"team":"ind";break;case"n":S.n=i;break;
+ case"start":S.teams=S.teams.map((t,j)=>t.trim()||"Equipo "+(j+1));S.scene="play";S.idx=0;S.res={};S.rres={};rst();break;
+ case"hint":ui.modal="hint";ui.focus="cl";break;case"reset":ui.modal="reset";ui.focus="no";break;case"close":ui.modal=null;break;case"dip":ui.modal="dip";ui.focus="cl";break;case"dl":return dlDip();
+ case"doreset":{const t=S.teams,m=S.mode,n=S.n;S=D();S.teams=t;S.mode=m;S.n=n;rst();break}
+ case"fs":try{document.fullscreenElement?document.exitFullscreen():document.documentElement.requestFullscreen()}catch(e){}return;
+ case"opt":return check(i);
+ case"slot":{if(ui.fill[i])ui.fill[i]=null;ui.act=i;break}
+ case"card":{const t=cur().cards[i];ui.fill=ui.fill.map(x=>x===t?null:x);ui.fill[ui.act]=t;ui.act=ui.fill[0]===null?0:ui.fill[1]===null?1:ui.act;if(ui.fill[0]&&ui.fill[1])return check();break}
+ case"check":return check();case"prev":return go(-1);case"next":return go(1);
+ case"ex":{const r=store()[cur().id];r.extra=i?"s":"n";break}
+ case"review":S.rev=failed().map(c=>c.id);S.rres={};S.ri=0;S.scene="review";rst();break;
+ case"expl":ui.expl=!ui.expl;break}
+ save();render()}
+document.addEventListener("click",e=>{const b=e.target.closest("[data-a]");if(!b||b.disabled)return;act(b.dataset.a,+b.dataset.i)});
+document.addEventListener("input",e=>{const d=e.target.dataset&&e.target.dataset.d;if(d){dip[d]=d==="team"?+e.target.value:e.target.value;drawDip();return}const t=e.target.dataset&&e.target.dataset.t;if(t!==undefined){S.teams[+t]=e.target.value;save()}});
+let dip={name:"",course:"",team:0};
+function DIPM(){const tm=S.mode==="team";return `<div class="ov"><div class="md" role="dialog" aria-modal="true" aria-label="Diploma"><div class="row" style="justify-content:space-between"><h3>Tu diploma</h3><button data-a="close" data-f="cl">Cerrar</button></div><div class="fm"><input data-d="name" value="${esc(dip.name)}" maxlength="40" placeholder="Nombre y apellidos" aria-label="Nombre y apellidos" style="width:240px"><input data-d="course" value="${esc(dip.course)}" maxlength="15" placeholder="Curso (ej. 2.º B)" aria-label="Curso" style="width:160px">${tm?`<select data-d="team" aria-label="Equipo">${S.teams.slice(0,S.n).map((t,j)=>`<option value="${j}" ${dip.team===j?"selected":""}>${esc(t)}</option>`).join("")}</select>`:""}</div><canvas id="dc" class="dc" width="1400" height="990" role="img" aria-label="Vista previa del diploma"></canvas><div class="row"><button class="primary" data-a="dl" data-f="dl">Descargar diploma (PNG)</button></div><p id="dm" class="cap" role="status">Escribe tu nombre y curso. El nombre no se guarda: solo aparece en la imagen.</p></div></div>`}
+function drawDip(){const cv=$("#dc");if(!cv)return;const x=cv.getContext("2d"),Wd=1400,H=990,n=teamN(),tm=n>1?dip.team:0,mine=C.filter(c=>n===1||c.id%n===tm);let p=0,f=0;mine.forEach(c=>{const r=S.res[c.id];if(r&&r.done){p+=r.pts;if(r.ok&&r.att===1)f++}});
+ x.fillStyle="#fffdf8";x.fillRect(0,0,Wd,H);x.strokeStyle="#5b3fa8";x.lineWidth=10;x.strokeRect(30,30,Wd-60,H-60);x.strokeStyle="#7fae8b";x.lineWidth=4;x.strokeRect(55,55,Wd-110,H-110);x.fillStyle="#8fdcd5";x.fillRect(60,60,Wd-120,16);
+ const t=(s,y,sz,c,w="normal",fam="Georgia,serif")=>{x.font=`${w} ${sz}px ${fam}`;x.fillStyle=c;x.textAlign="center";x.fillText(s,Wd/2,y)};
+ t("DIPLOMA",170,44,"#5b3fa8","bold","system-ui,sans-serif");t("Detectives de la materia",270,88,"#1f2433","bold");t("Sistemas materiales · Física y Química · 2.º ESO",330,30,"#0e7c78","normal","system-ui,sans-serif");t("Se reconoce a",430,34,"#1f2433");
+ let s=dip.name.trim();const ph=!s;s=s||"Nombre y apellidos";let sz=84;x.font=`bold ${sz}px Georgia,serif`;while(x.measureText(s).width>1100&&sz>30){sz-=4;x.font=`bold ${sz}px Georgia,serif`}t(s,540,sz,ph?"#b7b3c4":"#5b3fa8","bold");
+ x.strokeStyle="#1f2433";x.lineWidth=2;x.beginPath();x.moveTo(250,565);x.lineTo(1150,565);x.stroke();
+ t(dip.course.trim()?`Curso: ${dip.course.trim()}`:"Curso",625,38,"#1f2433");t("por observar y decidir como un buen detective",720,32,"#1f2433");t("de sustancias puras, mezclas, coloides y disoluciones.",765,32,"#1f2433");
+ t(`${n>1?"Equipo «"+S.teams[tm]+"»: ":""}${p} puntos · ${f} de ${mine.length} retos acertados a la primera`,850,36,"#0e7c78","bold","system-ui,sans-serif");t(new Date().toLocaleDateString("es-ES"),925,26,"#1f2433","normal","system-ui,sans-serif");
+ [[160,"#c9b8f0"],[200,"#8fdcd5"],[240,"#7fae8b"],[1160,"#7fae8b"],[1200,"#8fdcd5"],[1240,"#c9b8f0"]].forEach(([cx,c])=>{x.beginPath();x.arc(cx,900,18,0,7);x.fillStyle=c;x.fill();x.strokeStyle="#1f2433";x.lineWidth=3;x.stroke()})}
+async function dlDip(){const m=t=>{const e=$("#dm");if(e)e.textContent=t};drawDip();let dl=null;try{dl=window.claude&&await claude.use("downloads")}catch(e){}
+ if(!dl)return m("La descarga no está disponible aquí: haz una captura de pantalla del diploma.");
+ $("#dc").toBlob(async b=>{if(!b)return m("No se ha podido crear la imagen.");const s=(dip.name||"detective").normalize("NFD").replace(/[\u0300-\u036f]/g,"").replace(/[^a-zA-Z0-9]+/g,"-").replace(/^-|-$/g,"")||"detective";try{await dl.save({filename:`diploma-${s}.png`,data:b});m("✔ Diploma guardado. Ya puedes subirlo a Classroom.")}catch(e){m(e&&e.code==="declined"?"Descarga cancelada.":"No se ha podido guardar. Haz una captura de pantalla del diploma.")}},"image/png")}
+document.addEventListener("keydown",e=>{if(e.key==="Escape"&&ui.modal){ui.modal=null;render()}});
+render();
+</script></body></html>
